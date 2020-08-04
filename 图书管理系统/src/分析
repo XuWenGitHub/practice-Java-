@@ -1,0 +1,17 @@
+我们要做一个图书管理系统(带文件)
+
+                                 分析：
+                                 A：有哪些类？
+                                 1.Book、BookLinkedList       这是书和链表实现的图书系统
+                                 2.AddOperation、BorrowOperation、DelOperation
+                                  DisplayOperation、ExitOperation、FindOperation
+                                  IOperation、ReturnOperation    这些就是图书系统的功能
+                                 3.AdminUser、NormalUser、User     这就是两种用户1.管理员  2.普通用户
+                                 4.Demo
+
+                                 B：每个类啥东西呢？见名知意
+                                 C：每个类之间的关系？
+
+                                 IOperation是个接口(后面待Operation的都实现这个接口)，
+                                 User是个抽象类,NormalUser、User继承User类
+                                 Demo类是测试类，里面有主方法，还有读文件和存文件，还有登录方法
