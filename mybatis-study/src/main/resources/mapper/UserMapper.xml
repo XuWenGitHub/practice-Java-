@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.mapper.UserMapper">
+    <resultMap id="BaseResultMap" type="org.example.model.User">
+        <id column="id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="nickname" property="nickname"/>
+        <result column="sex" property="sex"/>
+        <result column="birthday" property="birthday"/>
+        <result column="head" property="head"/>
+        <result column="create_time" property="createTime"/>
+        <collection property="articles"
+                    columnPrefix="a_"
+                    resultMap="org.example.mapper.ArticleMapper.BaseResultMap"/>
+    </resultMap>
+
+    <select id="selectById" resultMap="BaseResultMap">
+        select * from user where id=#{id}
+    </select>
+
+    <insert id="insert" parameterType="org.example.model.User"
+            useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        insert into user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="username!=null">
+                username,
+            </if>
+            <if test="password!=null">
+                password,
+            </if>
+            <if test="nickname!=null">
+                nickname,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="username!=null">
+                #{username},
+            </if>
+            <if test="password!=null">
+                #{password},
+            </if>
+            <if test="nickname!=null">
+                #{nickname},
+            </if>
+        </trim>
+    </insert>
+
+    <delete id="delete" parameterType="org.example.model.User">
+        delete from user where id=#{id}
+    </delete>
+
+    <select id="selectLike" resultMap="BaseResultMap">
+        select * from user
+        <where>
+            <if test="username!=null">
+                and username like #{username}
+            </if>
+            <if test="password!=null">
+                and password like #{password}
+            </if>
+        </where>
+        order by id ${orderBy}
+    </select>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+            a.id a_id,
+            a.title a_title,
+            a.content a_content,
+            a.view_count a_view_count,
+            a.user_id a_user_id,
+            a.create_time a_create_time,
+            u.id,
+            u.username,
+            u.password,
+            u.nickname,
+            u.sex,
+            u.birthday,
+            u.head,
+            u.create_time
+        from article a
+            join user u on a.user_id=u.id
+    </select>
+
+    <insert id="batchInsert">
+        insert into user (
+            id,
+            username,
+            password,
+            nickname,
+            sex,
+            birthday,
+            head
+        ) values
+        <foreach collection="users" item="item"
+                 separator=",">
+        (
+            #{item.id},
+            #{item.username},
+            #{item.password},
+            #{item.nickname},
+            #{item.sex},
+            #{item.birthday},
+            #{item.head}
+        )
+        </foreach>
+    </insert>
+</mapper>
